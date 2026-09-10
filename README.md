@@ -1,15 +1,25 @@
 # TrackMate
 
-A simple, local-first workout log built with Expo (SDK 57) and React Native.
+A workout log built with Expo (SDK 57), React Native, and Supabase.
 
 ## Features
 
+- Email/password sign-in; workouts are private to your account (Postgres row-level security)
 - Start a workout and add exercises from a seeded list or a custom name
 - Log sets (weight in kg, reps, optional note) with basic input validation
 - View total volume per exercise
-- Workout history, stored on-device via AsyncStorage — no backend required
+- Workout history, synced via Supabase — available on any device you sign into
 
 ## Getting started
+
+Requires a `.env` file (not checked in) with:
+
+```
+EXPO_PUBLIC_SUPABASE_URL=your-project-url
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+Run the schema in `supabase/migrations/` against your Supabase project's SQL editor before first use.
 
 ```bash
 npm install
@@ -23,11 +33,13 @@ Then press `i` for iOS simulator, `a` for Android emulator, or `w` for web.
 ```
 App.tsx                 # Top-level state and screen routing
 src/
-  screens/               # HomeScreen, WorkoutScreen
+  screens/               # AuthScreen, HomeScreen, WorkoutScreen
   components/            # ExerciseCard, History
-  storage/               # AsyncStorage read/write helpers
+  data/                  # Supabase client, auth, and workout read/write
   types/                 # Shared Workout/Exercise/SetEntry types
   theme/                 # Color tokens
+supabase/
+  migrations/            # Versioned SQL schema + RLS policies
 ```
 
 ## Scripts

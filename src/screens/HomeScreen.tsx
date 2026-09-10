@@ -10,20 +10,27 @@ export function HomeScreen({
   screen,
   onStartWorkout,
   onViewHistory,
+  onSignOut,
 }: {
   workouts: Workout[];
   screen: 'home' | 'history';
   onStartWorkout: () => void;
   onViewHistory: () => void;
+  onSignOut: () => void;
 }) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" />
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.eyebrow}>TRACKMATE</Text>
+        <View style={styles.headerRow}>
+          <Text style={styles.eyebrow}>TRACKMATE</Text>
+          <Pressable onPress={onSignOut}>
+            <Text style={styles.headerAction}>Sign out</Text>
+          </Pressable>
+        </View>
         <Text style={styles.title}>Train with intention.</Text>
         <Text style={styles.subtitle}>
-          A simple, local-first workout log for your next session.
+          Log your workouts and pick up where you left off, on any device.
         </Text>
 
         <Pressable
@@ -36,7 +43,7 @@ export function HomeScreen({
         <View style={styles.summaryCard}>
           <Text style={styles.cardLabel}>WORKOUTS COMPLETED</Text>
           <Text style={styles.summaryValue}>{workouts.length}</Text>
-          <Text style={styles.cardHint}>Your data is stored on this device.</Text>
+          <Text style={styles.cardHint}>Synced to your account.</Text>
         </View>
 
         <Pressable style={styles.secondaryButton} onPress={onViewHistory}>
@@ -52,7 +59,9 @@ export function HomeScreen({
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: colors.background },
   container: { padding: 24, gap: 16 },
+  headerRow: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
   eyebrow: { color: colors.accent, fontSize: 12, fontWeight: '800', letterSpacing: 2 },
+  headerAction: { color: colors.muted, fontSize: 14, fontWeight: '700' },
   title: { color: colors.text, fontSize: 36, fontWeight: '800', lineHeight: 42 },
   subtitle: { color: colors.muted, fontSize: 16, lineHeight: 24, marginBottom: 8 },
   primaryButton: {
