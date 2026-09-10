@@ -19,7 +19,11 @@ export default function App() {
   const refreshWorkouts = useCallback(() => {
     getWorkouts()
       .then(setWorkouts)
-      .catch(() => Alert.alert('Could not load workouts', 'Check your connection and try again.'));
+      .catch((error) => {
+        console.error('Failed to load workouts', error);
+        Alert.alert('Could not load workouts', 'Check your connection and try again.');
+        setWorkouts((current) => current ?? []);
+      });
   }, []);
 
   const handleSessionChange = useCallback(
