@@ -1,6 +1,7 @@
 import type { Session } from '@supabase/supabase-js';
 import { useCallback, useEffect, useState } from 'react';
-import { Alert, SafeAreaView, StyleSheet, Text } from 'react-native';
+import { Alert, StyleSheet, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { getSession, onAuthStateChange, signOut } from './src/data/auth';
 import { getWorkouts, saveWorkout } from './src/data/workouts';
