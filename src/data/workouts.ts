@@ -54,32 +54,17 @@ export async function getWorkouts(): Promise<Workout[]> {
 }
 
 export async function saveWorkout(workout: Workout): Promise<void> {
-  const { data: workoutRow, error: workoutError } = await supabase
-    .from('workouts')
-    .insert({ started_at: workout.startedAt, completed_at: workout.completedAt || null })
-    .select('id')
-    .single();
-  if (workoutError) throw workoutError;
-
-  for (const [exerciseIndex, exercise] of workout.exercises.entries()) {
-    const { data: exerciseRow, error: exerciseError } = await supabase
-      .from('workout_exercises')
-      .insert({ workout_id: workoutRow.id, name: exercise.name, position: exerciseIndex })
-      .select('id')
-      .single();
-    if (exerciseError) throw exerciseError;
-
-    if (exercise.sets.length === 0) continue;
-
-    const { error: setsError } = await supabase.from('sets').insert(
-      exercise.sets.map((set, setIndex) => ({
-        workout_exercise_id: exerciseRow.id,
-        weight_kg: set.weightKg,
+  const { error } = await supabase.rpc('create_workout', {
+    started_at: workout.startedAt,
+    completed_at: workout.completedAt || null,
+    exercises: workout.exercises.map((exercise) => ({
+      name: exercise.name,
+      sets: exercise.sets.map((set) => ({
+        weightKg: set.weightKg,
         reps: set.reps,
         notes: set.notes,
-        position: setIndex,
       })),
-    );
-    if (setsError) throw setsError;
-  }
+    })),
+  });
+  if (error) throw error;
 }
