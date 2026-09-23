@@ -18,9 +18,12 @@
   },
   "devDependencies": {
     "@types/aes-js": "^3.1.4",
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.2.2",
     "eslint": "^9.39.5",
     "eslint-config-expo": "~57.0.2",
+    "jest": "~29.7.0",
+    "jest-expo": "~57.0.5",
     "prettier": "^3.9.6",
     "typescript": "~6.0.3"
   },
@@ -31,7 +34,17 @@
     "web": "expo start --web",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "jest"
   },
-  "private": true
+  "private": true,
+  "jest": {
+    "preset": "jest-expo",
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ],
+    "moduleNameMapper": {
+      "^@react-native-async-storage/async-storage$": "@react-native-async-storage/async-storage/jest/async-storage-mock"
+    }
+  }
 }
