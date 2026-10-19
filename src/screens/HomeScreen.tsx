@@ -11,12 +11,14 @@ export function HomeScreen({
   screen,
   onStartWorkout,
   onViewHistory,
+  onSelectWorkout,
   onSignOut,
 }: {
   workouts: Workout[];
   screen: 'home' | 'history';
   onStartWorkout: () => void;
   onViewHistory: () => void;
+  onSelectWorkout: (workout: Workout) => void;
   onSignOut: () => void;
 }) {
   return (
@@ -51,7 +53,7 @@ export function HomeScreen({
           <Text style={styles.secondaryButtonText}>View workout history</Text>
         </Pressable>
 
-        {screen === 'history' && <History workouts={workouts} />}
+        {screen === 'history' && <History workouts={workouts} onSelectWorkout={onSelectWorkout} />}
       </ScrollView>
     </SafeAreaView>
   );

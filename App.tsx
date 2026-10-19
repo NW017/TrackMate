@@ -7,6 +7,7 @@ import { getSession, onAuthStateChange, signOut } from './src/data/auth';
 import { getWorkouts, saveWorkout } from './src/data/workouts';
 import { AuthScreen } from './src/screens/AuthScreen';
 import { HomeScreen } from './src/screens/HomeScreen';
+import { WorkoutDetailScreen } from './src/screens/WorkoutDetailScreen';
 import { WorkoutScreen } from './src/screens/WorkoutScreen';
 import { colors } from './src/theme/colors';
 import type { Workout } from './src/types/workout';
@@ -15,6 +16,7 @@ export default function App() {
   const [session, setSession] = useState<Session | null | undefined>(undefined);
   const [workouts, setWorkouts] = useState<Workout[] | null>(null);
   const [activeWorkout, setActiveWorkout] = useState<Workout | null>(null);
+  const [viewingWorkout, setViewingWorkout] = useState<Workout | null>(null);
   const [screen, setScreen] = useState<'home' | 'history'>('home');
 
   const refreshWorkouts = useCallback(() => {
@@ -89,6 +91,17 @@ export default function App() {
     );
   }
 
+  if (viewingWorkout) {
+    return (
+      <WorkoutDetailScreen
+        workout={viewingWorkout}
+        onBack={() => setViewingWorkout(null)}
+        onChanged={refreshWorkouts}
+        onDeleted={() => setViewingWorkout(null)}
+      />
+    );
+  }
+
   if (workouts === null) {
     return (
       <SafeAreaView style={styles.safeArea}>
@@ -110,6 +123,7 @@ export default function App() {
         })
       }
       onViewHistory={() => setScreen('history')}
+      onSelectWorkout={setViewingWorkout}
       onSignOut={handleSignOut}
     />
   );

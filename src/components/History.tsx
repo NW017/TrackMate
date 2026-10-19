@@ -1,9 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '../theme/colors';
 import type { Workout } from '../types/workout';
 
-export function History({ workouts }: { workouts: Workout[] }) {
+export function History({
+  workouts,
+  onSelectWorkout,
+}: {
+  workouts: Workout[];
+  onSelectWorkout: (workout: Workout) => void;
+}) {
   if (workouts.length === 0) {
     return (
       <Text style={styles.cardHint}>
@@ -15,7 +21,11 @@ export function History({ workouts }: { workouts: Workout[] }) {
     <View style={styles.history}>
       <Text style={styles.sectionTitle}>Recent workouts</Text>
       {workouts.map((workout) => (
-        <View style={styles.historyRow} key={workout.id}>
+        <Pressable
+          style={styles.historyRow}
+          key={workout.id}
+          onPress={() => onSelectWorkout(workout)}
+        >
           <View>
             <Text style={styles.historyDate}>
               {new Date(workout.completedAt).toLocaleDateString()}
@@ -25,7 +35,7 @@ export function History({ workouts }: { workouts: Workout[] }) {
           <Text style={styles.cardHint}>
             {workout.exercises.reduce((total, exercise) => total + exercise.sets.length, 0)} sets
           </Text>
-        </View>
+        </Pressable>
       ))}
     </View>
   );
