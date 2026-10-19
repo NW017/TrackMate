@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { SetRow } from './SetRow';
 import { colors } from '../theme/colors';
-import type { WorkoutExercise } from '../types/workout';
+import type { SetEntry, WorkoutExercise } from '../types/workout';
 
 export function ExerciseCard({
   exercise,
@@ -45,6 +46,13 @@ export function ExerciseCard({
     setNotes('');
   };
 
+  const saveSet = (setId: string, changes: Omit<SetEntry, 'id'>) => {
+    onChange({
+      ...exercise,
+      sets: exercise.sets.map((set) => (set.id === setId ? { ...set, ...changes } : set)),
+    });
+  };
+
   const removeSet = (setId: string) => {
     onChange({ ...exercise, sets: exercise.sets.filter((set) => set.id !== setId) });
   };
@@ -61,15 +69,13 @@ export function ExerciseCard({
         </View>
       </View>
       {exercise.sets.map((set, index) => (
-        <View style={styles.setRow} key={set.id}>
-          <Text style={styles.setNumber}>Set {index + 1}</Text>
-          <Text style={styles.setValue}>{set.weightKg} kg</Text>
-          <Text style={styles.setValue}>{set.reps} reps</Text>
-          {set.notes ? <Text style={styles.setNote}>{set.notes}</Text> : null}
-          <Pressable onPress={() => removeSet(set.id)}>
-            <Text style={styles.removeSetText}>✕</Text>
-          </Pressable>
-        </View>
+        <SetRow
+          key={set.id}
+          setNumber={index + 1}
+          set={set}
+          onSave={(changes) => saveSet(set.id, changes)}
+          onDelete={() => removeSet(set.id)}
+        />
       ))}
       <View style={styles.inputRow}>
         <TextInput
@@ -110,18 +116,6 @@ const styles = StyleSheet.create({
   exerciseHeadingActions: { alignItems: 'center', flexDirection: 'row', gap: 12 },
   volume: { color: colors.accent, fontSize: 13, fontWeight: '700' },
   removeExerciseText: { color: colors.muted, fontSize: 13, fontWeight: '600' },
-  setRow: {
-    alignItems: 'center',
-    borderBottomColor: colors.border,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    gap: 10,
-    paddingVertical: 9,
-  },
-  setNumber: { color: colors.muted, flex: 1, fontSize: 13 },
-  setValue: { color: colors.text, fontSize: 14, fontWeight: '600' },
-  setNote: { color: colors.muted, flex: 1, fontSize: 12, textAlign: 'right' },
-  removeSetText: { color: colors.muted, fontSize: 14, fontWeight: '700' },
   inputRow: { flexDirection: 'row', gap: 10 },
   input: {
     backgroundColor: colors.background,
