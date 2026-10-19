@@ -82,3 +82,29 @@ export async function saveWorkout(workout: Workout): Promise<void> {
   const { error } = await supabase.rpc('create_workout', buildCreateWorkoutPayload(workout));
   if (error) throw error;
 }
+
+export async function updateSet(
+  setId: string,
+  changes: { weightKg: number; reps: number; notes: string },
+): Promise<void> {
+  const { error } = await supabase
+    .from('sets')
+    .update({ weight_kg: changes.weightKg, reps: changes.reps, notes: changes.notes })
+    .eq('id', setId);
+  if (error) throw error;
+}
+
+export async function deleteSet(setId: string): Promise<void> {
+  const { error } = await supabase.from('sets').delete().eq('id', setId);
+  if (error) throw error;
+}
+
+export async function deleteWorkoutExercise(exerciseId: string): Promise<void> {
+  const { error } = await supabase.from('workout_exercises').delete().eq('id', exerciseId);
+  if (error) throw error;
+}
+
+export async function deleteWorkout(workoutId: string): Promise<void> {
+  const { error } = await supabase.from('workouts').delete().eq('id', workoutId);
+  if (error) throw error;
+}
