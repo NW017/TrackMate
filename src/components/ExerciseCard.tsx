@@ -7,9 +7,11 @@ import type { WorkoutExercise } from '../types/workout';
 export function ExerciseCard({
   exercise,
   onChange,
+  onRemove,
 }: {
   exercise: WorkoutExercise;
   onChange: (exercise: WorkoutExercise) => void;
+  onRemove: () => void;
 }) {
   const [weight, setWeight] = useState('');
   const [reps, setReps] = useState('');
@@ -43,11 +45,20 @@ export function ExerciseCard({
     setNotes('');
   };
 
+  const removeSet = (setId: string) => {
+    onChange({ ...exercise, sets: exercise.sets.filter((set) => set.id !== setId) });
+  };
+
   return (
     <View style={styles.exerciseCard}>
       <View style={styles.exerciseHeading}>
         <Text style={styles.exerciseName}>{exercise.name}</Text>
-        <Text style={styles.volume}>{totalVolume.toFixed(1)} kg</Text>
+        <View style={styles.exerciseHeadingActions}>
+          <Text style={styles.volume}>{totalVolume.toFixed(1)} kg</Text>
+          <Pressable onPress={onRemove}>
+            <Text style={styles.removeExerciseText}>Remove</Text>
+          </Pressable>
+        </View>
       </View>
       {exercise.sets.map((set, index) => (
         <View style={styles.setRow} key={set.id}>
@@ -55,6 +66,9 @@ export function ExerciseCard({
           <Text style={styles.setValue}>{set.weightKg} kg</Text>
           <Text style={styles.setValue}>{set.reps} reps</Text>
           {set.notes ? <Text style={styles.setNote}>{set.notes}</Text> : null}
+          <Pressable onPress={() => removeSet(set.id)}>
+            <Text style={styles.removeSetText}>✕</Text>
+          </Pressable>
         </View>
       ))}
       <View style={styles.inputRow}>
@@ -93,7 +107,9 @@ const styles = StyleSheet.create({
   exerciseCard: { backgroundColor: colors.card, borderRadius: 16, gap: 10, padding: 16 },
   exerciseHeading: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
   exerciseName: { color: colors.text, fontSize: 19, fontWeight: '800' },
+  exerciseHeadingActions: { alignItems: 'center', flexDirection: 'row', gap: 12 },
   volume: { color: colors.accent, fontSize: 13, fontWeight: '700' },
+  removeExerciseText: { color: colors.muted, fontSize: 13, fontWeight: '600' },
   setRow: {
     alignItems: 'center',
     borderBottomColor: colors.border,
@@ -105,6 +121,7 @@ const styles = StyleSheet.create({
   setNumber: { color: colors.muted, flex: 1, fontSize: 13 },
   setValue: { color: colors.text, fontSize: 14, fontWeight: '600' },
   setNote: { color: colors.muted, flex: 1, fontSize: 12, textAlign: 'right' },
+  removeSetText: { color: colors.muted, fontSize: 14, fontWeight: '700' },
   inputRow: { flexDirection: 'row', gap: 10 },
   input: {
     backgroundColor: colors.background,

@@ -68,6 +68,12 @@ export function WorkoutScreen({
               exercises[exerciseIndex] = updated;
               onChange({ ...workout, exercises });
             }}
+            onRemove={() => {
+              onChange({
+                ...workout,
+                exercises: workout.exercises.filter((item) => item.id !== exercise.id),
+              });
+            }}
           />
         ))}
 
