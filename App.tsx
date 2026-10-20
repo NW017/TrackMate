@@ -4,6 +4,7 @@ import { Alert, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { getSession, onAuthStateChange, signOut } from './src/data/auth';
+import { clearDraftWorkout, getDraftWorkout, saveDraftWorkout } from './src/data/draftWorkout';
 import { getWorkouts, saveWorkout } from './src/data/workouts';
 import { AuthScreen } from './src/screens/AuthScreen';
 import { HomeScreen } from './src/screens/HomeScreen';
@@ -34,6 +35,11 @@ export default function App() {
       setSession(nextSession);
       if (nextSession) {
         refreshWorkouts();
+        getDraftWorkout(nextSession.user.id)
+          .then((draft) => {
+            if (draft) setActiveWorkout(draft);
+          })
+          .catch((error) => console.error('Failed to load draft workout', error));
       } else {
         setWorkouts(null);
         setActiveWorkout(null);
@@ -48,6 +54,19 @@ export default function App() {
       .catch(() => setSession(null));
     return onAuthStateChange(handleSessionChange);
   }, [handleSessionChange]);
+
+  useEffect(() => {
+    if (!session) return;
+    if (activeWorkout) {
+      saveDraftWorkout(session.user.id, activeWorkout).catch((error) =>
+        console.error('Failed to save draft workout', error),
+      );
+    } else {
+      clearDraftWorkout(session.user.id).catch((error) =>
+        console.error('Failed to clear draft workout', error),
+      );
+    }
+  }, [session, activeWorkout]);
 
   const finishWorkout = async (workout: Workout) => {
     const completedWorkout = { ...workout, completedAt: new Date().toISOString() };
