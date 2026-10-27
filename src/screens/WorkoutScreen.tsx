@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ExerciseCard } from '../components/ExerciseCard';
+import { ExercisePicker } from '../components/ExercisePicker';
 import { colors } from '../theme/colors';
-import { seededExercises } from '../types/workout';
-import type { Exercise, Workout } from '../types/workout';
+import type { Workout } from '../types/workout';
 
 export function WorkoutScreen({
   workout,
@@ -20,22 +20,13 @@ export function WorkoutScreen({
   onCancel: () => void;
 }) {
   const [showExercisePicker, setShowExercisePicker] = useState(false);
-  const [customExercise, setCustomExercise] = useState('');
 
-  const addExercise = (exercise: Exercise) => {
-    if (workout.exercises.some((item) => item.id === exercise.id)) {
-      setShowExercisePicker(false);
-      return;
-    }
-    onChange({ ...workout, exercises: [...workout.exercises, { ...exercise, sets: [] }] });
+  const addExercise = (name: string) => {
+    onChange({
+      ...workout,
+      exercises: [...workout.exercises, { id: `local-${Date.now()}`, name, sets: [] }],
+    });
     setShowExercisePicker(false);
-  };
-
-  const addCustomExercise = () => {
-    const name = customExercise.trim();
-    if (!name) return;
-    addExercise({ id: `custom-${Date.now()}`, name });
-    setCustomExercise('');
   };
 
   return (
@@ -85,29 +76,10 @@ export function WorkoutScreen({
         </Pressable>
 
         {showExercisePicker && (
-          <View style={styles.picker}>
-            {seededExercises.map((exercise) => (
-              <Pressable
-                key={exercise.id}
-                style={styles.pickerRow}
-                onPress={() => addExercise(exercise)}
-              >
-                <Text style={styles.pickerText}>{exercise.name}</Text>
-              </Pressable>
-            ))}
-            <View style={styles.customRow}>
-              <TextInput
-                value={customExercise}
-                onChangeText={setCustomExercise}
-                placeholder="Custom exercise"
-                placeholderTextColor="#718096"
-                style={[styles.input, styles.customInput]}
-              />
-              <Pressable style={styles.smallButton} onPress={addCustomExercise}>
-                <Text style={styles.smallButtonText}>Add</Text>
-              </Pressable>
-            </View>
-          </View>
+          <ExercisePicker
+            existingExerciseNames={workout.exercises.map((exercise) => exercise.name)}
+            onSelect={addExercise}
+          />
         )}
       </ScrollView>
     </SafeAreaView>
@@ -142,27 +114,4 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   secondaryButtonText: { color: colors.text, fontSize: 16, fontWeight: '700' },
-  picker: { backgroundColor: colors.card, borderRadius: 16, padding: 8 },
-  pickerRow: { borderBottomColor: colors.border, borderBottomWidth: 1, padding: 14 },
-  pickerText: { color: colors.text, fontSize: 16 },
-  customRow: { alignItems: 'center', flexDirection: 'row', gap: 8, padding: 8 },
-  input: {
-    backgroundColor: colors.background,
-    borderColor: colors.border,
-    borderRadius: 10,
-    borderWidth: 1,
-    color: colors.text,
-    flex: 1,
-    padding: 12,
-  },
-  customInput: { flex: 1 },
-  smallButton: {
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    backgroundColor: colors.accent,
-    borderRadius: 10,
-    paddingHorizontal: 16,
-    paddingVertical: 11,
-  },
-  smallButtonText: { color: colors.background, fontSize: 14, fontWeight: '800' },
 });
