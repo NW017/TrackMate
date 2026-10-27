@@ -11,8 +11,8 @@ type SetRow = {
 
 type WorkoutExerciseRow = {
   id: string;
-  name: string;
   position: number;
+  exercises: { name: string } | null;
   sets: SetRow[];
 };
 
@@ -32,7 +32,7 @@ export function mapWorkoutRow(workout: WorkoutRow): Workout {
       .sort((a, b) => a.position - b.position)
       .map((exercise) => ({
         id: exercise.id,
-        name: exercise.name,
+        name: exercise.exercises?.name ?? '',
         sets: [...exercise.sets]
           .sort((a, b) => a.position - b.position)
           .map((set) => ({
@@ -49,12 +49,12 @@ export async function getWorkouts(): Promise<Workout[]> {
   const { data, error } = await supabase
     .from('workouts')
     .select(
-      'id, started_at, completed_at, workout_exercises(id, name, position, sets(id, weight_kg, reps, notes, position))',
+      'id, started_at, completed_at, workout_exercises(id, position, exercises(name), sets(id, weight_kg, reps, notes, position))',
     )
     .order('completed_at', { ascending: false });
   if (error) throw error;
 
-  return ((data ?? []) as WorkoutRow[]).map(mapWorkoutRow);
+  return ((data ?? []) as unknown as WorkoutRow[]).map(mapWorkoutRow);
 }
 
 type CreateWorkoutPayload = {
@@ -107,4 +107,10 @@ export async function deleteWorkoutExercise(exerciseId: string): Promise<void> {
 export async function deleteWorkout(workoutId: string): Promise<void> {
   const { error } = await supabase.from('workouts').delete().eq('id', workoutId);
   if (error) throw error;
+}
+
+export async function getExerciseCatalog(): Promise<{ id: string; name: string }[]> {
+  const { data, error } = await supabase.from('exercises').select('id, name').order('name');
+  if (error) throw error;
+  return data ?? [];
 }

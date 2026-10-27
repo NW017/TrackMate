@@ -9,8 +9,8 @@ describe('mapWorkoutRow', () => {
       workout_exercises: [
         {
           id: 'exercise-2',
-          name: 'Back Squat',
           position: 1,
+          exercises: { name: 'Back Squat' },
           sets: [
             { id: 'set-2', weight_kg: 100, reps: 5, notes: '', position: 1 },
             { id: 'set-1', weight_kg: 80, reps: 8, notes: 'warm-up', position: 0 },
@@ -18,8 +18,8 @@ describe('mapWorkoutRow', () => {
         },
         {
           id: 'exercise-1',
-          name: 'Bench Press',
           position: 0,
+          exercises: { name: 'Bench Press' },
           sets: [],
         },
       ],
@@ -51,8 +51,8 @@ describe('mapWorkoutRow', () => {
       workout_exercises: [
         {
           id: 'exercise-1',
-          name: 'Deadlift',
           position: 0,
+          exercises: { name: 'Deadlift' },
           sets: [
             {
               id: 'set-1',
@@ -67,6 +67,17 @@ describe('mapWorkoutRow', () => {
     });
 
     expect(workout.exercises[0].sets[0].weightKg).toBe(140.5);
+  });
+
+  it('falls back to an empty name if the exercise join comes back null', () => {
+    const workout = mapWorkoutRow({
+      id: 'workout-1',
+      started_at: '2026-09-10T10:00:00.000Z',
+      completed_at: null,
+      workout_exercises: [{ id: 'exercise-1', position: 0, exercises: null, sets: [] }],
+    });
+
+    expect(workout.exercises[0].name).toBe('');
   });
 });
 
