@@ -3,10 +3,10 @@ import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { SetRow } from '../components/SetRow';
-import { deleteSet, deleteWorkout, deleteWorkoutExercise, updateSet } from '../data/workouts';
-import { colors } from '../theme/colors';
-import type { SetEntry, Workout, WorkoutExercise } from '../types/workout';
+import { SetRow } from './SetRow';
+import { deleteSet, deleteWorkout, deleteWorkoutExercise, updateSet } from './workouts';
+import { colors } from '../../theme/colors';
+import type { SetEntry, Workout, WorkoutExercise } from '../../types/workout';
 
 export function WorkoutDetailScreen({
   workout: initialWorkout,

@@ -9,8 +9,8 @@ import {
   View,
 } from 'react-native';
 
-import { getExerciseCatalog } from '../data/workouts';
-import { colors } from '../theme/colors';
+import { getExerciseCatalog } from '../workout/workouts';
+import { colors } from '../../theme/colors';
 
 export function ExercisePicker({
   existingExerciseNames,

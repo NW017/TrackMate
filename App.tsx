@@ -5,11 +5,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { getSession, onAuthStateChange, signOut } from './src/data/auth';
 import { clearDraftWorkout, getDraftWorkout, saveDraftWorkout } from './src/data/draftWorkout';
-import { getWorkouts, saveWorkout } from './src/data/workouts';
+import { getWorkouts, saveWorkout } from './src/features/workout/workouts';
+import { WorkoutDetailScreen } from './src/features/workout/WorkoutDetailScreen';
+import { WorkoutScreen } from './src/features/workout/WorkoutScreen';
 import { AuthScreen } from './src/screens/AuthScreen';
 import { HomeScreen } from './src/screens/HomeScreen';
-import { WorkoutDetailScreen } from './src/screens/WorkoutDetailScreen';
-import { WorkoutScreen } from './src/screens/WorkoutScreen';
 import { colors } from './src/theme/colors';
 import type { Workout } from './src/types/workout';
 

@@ -3,10 +3,10 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ExerciseCard } from '../components/ExerciseCard';
-import { ExercisePicker } from '../components/ExercisePicker';
-import { colors } from '../theme/colors';
-import type { Workout } from '../types/workout';
+import { ExerciseCard } from './ExerciseCard';
+import { ExercisePicker } from '../exercise-catalog/ExercisePicker';
+import { colors } from '../../theme/colors';
+import type { Workout } from '../../types/workout';
 
 export function WorkoutScreen({
   workout,

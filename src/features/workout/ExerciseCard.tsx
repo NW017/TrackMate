@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { SetRow } from './SetRow';
-import { colors } from '../theme/colors';
-import type { SetEntry, WorkoutExercise } from '../types/workout';
+import { colors } from '../../theme/colors';
+import type { SetEntry, WorkoutExercise } from '../../types/workout';
 
 export function ExerciseCard({
   exercise,

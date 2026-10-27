@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { colors } from '../theme/colors';
-import type { SetEntry } from '../types/workout';
+import { colors } from '../../theme/colors';
+import type { SetEntry } from '../../types/workout';
 
 export function SetRow({
   setNumber,

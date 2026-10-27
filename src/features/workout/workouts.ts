@@ -1,5 +1,5 @@
-import { supabase } from './supabaseClient';
-import type { Workout } from '../types/workout';
+import { supabase } from '../../data/supabaseClient';
+import type { Workout } from '../../types/workout';
 
 type SetRow = {
   id: string;
